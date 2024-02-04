@@ -59,7 +59,7 @@ class Edge(BaseModel):
     node_from: Node = Node()
     node_to: Node = Node()
     total: str = None
-    mcs: str = None
+    mcs: float = None
     chg: str = None
     softbond: str = None
     min_no_atoms: str = None
