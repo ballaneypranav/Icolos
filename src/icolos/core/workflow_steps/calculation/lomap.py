@@ -19,6 +19,11 @@ class StepLomap(StepBase, BaseModel):
         super().__init__(**data)
         self._openbabel_executor = OpenBabelExecutor()
 
+    def _parse_output(self, tmp_dir: str) -> None:
+        for file in os.listdir(tmp_dir):
+            for file in [f for f in os.listdir(tmp_dir) if f.endswith("txt")]:
+                self._add_data_to_generic(file, f.read())
+
     def execute(self):
         # compute either mcs or radial graph, end up with networkX object which needs to be parsed into a PerturbationMap object
         tmp_dir = self._make_tmpdir()
@@ -68,3 +73,7 @@ class StepLomap(StepBase, BaseModel):
         # revert to old wd
         os.chdir(existing_dir)
         self.get_workflow_object().set_perturbation_map(p_map)
+
+        self._parse_output(tmp_dir)
+        self._remove_temporary(tmp_dir)
+
